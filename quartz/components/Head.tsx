@@ -68,6 +68,17 @@ export default (() => {
               property="og:image:type"
               content={`image/${getFileExtension(ogImageDefaultPath) ?? "png"}`}
             />
+            {/* Attribution */}
+            <meta property="og:image:alt" content="Modified from Figma asset" />
+            <meta
+              name="image:attribution"
+              content="Based on Figma asset by kate in design, modified by Amber. used in favicon and og image"
+            />
+            <meta name="image:license" content="CC BY 4.0" />
+            <meta
+              name="image:source"
+              content="https://www.figma.com/community/file/1453154145818723604"
+            />
           </>
         )}
 
