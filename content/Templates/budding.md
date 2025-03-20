@@ -13,8 +13,6 @@ imageNameKey: <% tp.file.folder().split("_").pop() %>
 draft: true
 ---
 
-# {{title}}
-
 ## 🤔 탐구 중인 핵심 질문
 
 -

@@ -1,7 +1,7 @@
 ---
-title: Evergreens
+title: 🌳 Evergreens
 enableToc: false
-weight: 2
+weight: 3
 ---
 
 # 완성된 생각들 (Evergreens) 🌳

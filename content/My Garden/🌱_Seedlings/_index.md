@@ -1,5 +1,5 @@
 ---
-title: Seedlings
+title: 🌱 Seedlings
 enableToc: false
 weight: 1
 ---

@@ -1,6 +1,6 @@
 ---
 title: isPending & isFetching & isLoading
-description: 
+description:
 stage: seedling
 date: 2025-03-19
 lastmod: 2025-03-19
@@ -11,6 +11,7 @@ category: tech
 enableToc: true
 type: note
 imageNameKey: Seedlings
+draft: true
 ---
 
 ## 💡 토픽

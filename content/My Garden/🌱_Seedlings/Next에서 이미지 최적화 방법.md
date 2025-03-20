@@ -7,18 +7,14 @@ lastmod: 2025-03-18
 tags:
   - seedling
   - Next
-category: 
+category:
 enableToc: true
 type: note
 ---
 
-# Next에서 이미지 최적화 방법
-
 > Doctru 프로젝트에서 Next 프레임워크를 쓰면서 Next가 가진 이미지 최적화 방법을 최대한 쓸 수 있는 법이 있을까?
 
--
-
-### 🔍 Research
+## 🔍 Research
 
 ### 1. Next의 `<Image>` 컴포넌트 사용
 
@@ -99,12 +95,12 @@ export default function Page() {
 - [ ] 블러 플레이스홀더 옵션 활용해보기
 - [ ] 반응형 이미지 처리 방법 더 알아보기
 
-#### 📚 References & Resources
+### 📚 References & Resources
 
 - [올리브영 테크 블로그(2023) : NEXT.JS의 이미지 최적화는 어떻게 동작하는가?](https://oliveyoung.tech/2023-06-09/nextjs-image-optimization/)
 - [Next 공식문서: 이미지 최적화](https://nextjs.org/docs/app/getting-started/images-and-fonts)
 
-#### 📝 연관 노트
+### 📝 연관 노트
 
 - 🌿 **Budding:** [[]]
 - 🌳 **Evergreen:** [[]]

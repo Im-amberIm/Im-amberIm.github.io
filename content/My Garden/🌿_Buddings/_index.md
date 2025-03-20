@@ -1,5 +1,5 @@
 ---
-title: Buddings
+title: 🌿 Buddings
 enableToc: false
 weight: 2
 ---
