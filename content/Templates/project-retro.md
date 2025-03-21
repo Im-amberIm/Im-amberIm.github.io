@@ -17,8 +17,6 @@ imageNameKey: <% tp.file.folder().split("/").pop() %>
 draft: true
 ---
 
-# {{title}}
-
 ## 프로젝트 컨텍스트
 
 <!-- 프로젝트 설명과 목표 -->

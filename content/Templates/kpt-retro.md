@@ -15,8 +15,6 @@ imageNameKey: <% tp.file.folder().split("/").pop() %>
 draft: true
 ---
 
-# {{title}} - KPT 회고
-
 ## 프로젝트 정보
 
 <!-- 프로젝트에 대한 간략한 설명과 목표 -->
