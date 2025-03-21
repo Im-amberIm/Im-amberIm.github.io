@@ -1,9 +1,6 @@
 ---
 title: Projects
-order:
-  - Moving
-  - Docthru
-  - View my startup
+weight: 2
 ---
 
 # 프로젝트 🚀

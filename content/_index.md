@@ -1,16 +1,12 @@
 ---
 title: Dev Garden
-enableToc: false
-order:
-  - My Garden
-  - Projects
-  - Books
+enableToc: falses
 ---
 
-# Welcome to Amber's Dev-garden 🌱🌿🌳
+# Welcome to Amber's Dev-garden 🌱🌿🌳 <br>
 
-Blog가 아닌 Digital Garden으로 완벽이란 부담을 내려놓고 성장하는 글을 쓰는 곳입니다.
-초안 부터 완성 까지 모든 단계의 글을 적습니다.
+Blog가 아닌 Digital Garden으로 완벽이란 부담을 내려놓고 성장하는 글을 쓰는 곳입니다.<br>
+초안 부터 완성 까지 모든 단계의 글을 적습니다. <br>
 
 ## 정원 둘러보기
 

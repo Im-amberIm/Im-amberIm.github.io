@@ -1,5 +1,6 @@
 ---
 title: Books
+weight: 3
 ---
 
 # 독서 노트 📚

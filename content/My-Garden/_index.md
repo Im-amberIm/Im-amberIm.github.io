@@ -1,5 +1,6 @@
 ---
 title: My Garden
+weight: 4
 ---
 
 # Amber's Dev-log 🌱🌿🌳
@@ -17,3 +18,4 @@ title: My Garden
 ## 🌳 완성 단계 (Evergreens)
 
 충분히 성장하여 단단해진 생각들입니다. 깊이 있게 정리되고 체계화된 지식을 담고 있습니다.
+ß

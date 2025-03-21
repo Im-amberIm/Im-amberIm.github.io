@@ -1,16 +1,16 @@
 ---
 title: svg 아이콘 최적화 시키기 (feat. sprite)
 description: svg 아이콘 최적화 시키기
-type: "\bfunction"
+type: "function"
 date: 2024-12-20
 lastmod: 2025-03-18
-start_date: 
-end_date: 
+start_date:
+end_date:
 tags:
   - project
-tech_stack: 
-github: 
-live_demo: 
+tech_stack:
+github:
+live_demo:
 enableToc: true
 imageNameKey: "\bDocthru"
 ---
@@ -34,8 +34,8 @@ const App = () => <HeartIcon fill="red" />
 1. **번들 크기와 파싱 시간**: JS 번들이 커질수록 브라우저가 파싱하고 실행하는 시간이 길어진다. 이게 성능에 직접적인 영향을 준다.
 2. **기기 다양성 고려**: 최신 고성능 기기에서는 차이가 크게 느껴지지 않을 수 있지만, 전 세계 사용자의 75%는 중저가 기기를 사용한다는 통계를 봤다. 우리는 모든 사용자를 배려해야 한다.
 3. **잘못된 접근법**: SVG는 본질적으로 이미지를 설명하는 XML 태그인데, 이걸 JavaScript로 처리하는 건 형식에 맞지 않다. 그냥 이미지로 다루는 게 더 자연스럽다.
-   
-연관노트:    [[My Garden/🌱_Seedlings/svg-in-js ❌|svg-in-js ❌]]
+
+연관노트: [[My Garden/🌱_Seedlings/svg-in-js ❌|svg-in-js ❌]]
 
 ## 대안
 
@@ -287,7 +287,6 @@ export default function FeedbackForm({ id }) {
 
 처음에는 단순한 최적화 작업이라고 생각했지만, 결국 사용자 경험과 개발 경험 모두를 크게 향상시키는 프로젝트가 되었다. 단순히 "아이콘을 사용"하는 것에서 "성능과 사용성을 모두 고려한 아이콘 시스템 구축"으로 접근 방식을 바꾸게 되었다.
 
-
 ## 기술적 성과 및 배운 점
 
 1. **웹 성능 최적화**: JavaScript 번들 크기, 파싱/컴파일 시간, 메모리 사용량 등 다양한 측면에서의 성능 최적화 기법 습득
@@ -295,8 +294,8 @@ export default function FeedbackForm({ id }) {
 3. **시스템 설계**: 확장 가능하고 유지보수하기 쉬운 아이콘 시스템 설계
 4. **점진적 마이그레이션**: 기존 코드베이스를 유지하면서 새로운 패턴을 도입하는 전략 수립
 
- 단순한 이미지 최적화를 넘어, 웹 애플리케이션의 전체적인 성능과 사용자 경험을 고려한 종합적인 문제 해결을 하면서 많이 배울수 있었다.
- 
+단순한 이미지 최적화를 넘어, 웹 애플리케이션의 전체적인 성능과 사용자 경험을 고려한 종합적인 문제 해결을 하면서 많이 배울수 있었다.
+
 - [ ] webpack
 
 ## 개발 여정
