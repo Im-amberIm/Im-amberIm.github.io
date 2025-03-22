@@ -238,7 +238,7 @@ imageNameKey: viewMyStartup
   - 커스텀 훅을 사용하여 `load`, `error`, `api call` 함수를 생성하는 과정에서 어려움을 겪음. 이해하는데 시간이 많이 소요 되었음.
   - CSS 애니메이션 구현 시, 로고의 `i`의 head 부분만 바운스되도록 애니메이션을 적용하려 했으나, 화면 너비가 바뀌면 원하는 위치에 정확히 맞추기 어려움.
 
-![Screenshot 2024-08-30 at 2.01.20 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ff51c3c0-4d11-48ed-b338-2077d1f8947f/bb89101c-8b5a-4df6-95a8-b6ccc6aa2d67/Screenshot_2024-08-30_at_2.01.20_PM.png)
+![[attachments/viewMyStartup-retrospective.png]]
 
 **해결책**:
 

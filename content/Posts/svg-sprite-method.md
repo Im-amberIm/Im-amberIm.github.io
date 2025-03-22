@@ -1,18 +1,19 @@
 ---
 title: svg 아이콘 최적화 시키기 (feat. sprite)
 description: svg 아이콘 최적화 시키기
-type: "function"
+type: function
 date: 2024-12-20
 lastmod: 2025-03-18
-start_date:
-end_date:
+start_date: 
+end_date: 
 tags:
   - project
-tech_stack:
-github:
-live_demo:
+tech_stack: 
+github: 
+live_demo: 
 enableToc: true
 imageNameKey: "\bDocthru"
+draft: false
 ---
 
 ## 배경
@@ -196,16 +197,15 @@ export default function Svg({
 }
 ```
 
-#### 레이어
+### 레이어
 
 한 블로그 [Complete guide to SVG sprites](https://medium.com/@hayavuk/complete-guide-to-svg-sprites-7e202e215d34)에서 sprite내에서 symbol들을 더 잘게 레이어로 쪼개 재사용하는 법을 읽었다.
 
 아이콘 자체로 재사용 하려했지 아이콘 내의 요소들을 또 나눠서 그걸 기반으로 또 사용할 생각을 못했었다.
 
-버튼이 이렇게 비활성화 / 활성화 적용이 되어야 하는데 디자인대로 구현시 안의 화살표와 밖의 원을 서로 다른 색상을 적용을 시켜줘야 되어야했다.
-![[Projects/Docthru/attachments/Docthru-SVG 아이콘 최적화 시키기 (feat. sprite).png]]
-![[Projects/Docthru/attachments/Docthru-SVG 아이콘 최적화 시키기 (feat. sprite)-2.png]]
+버튼이 이렇게 비활성화 / 활성화 적용이 되어야 하는데 디자인대로 구현시 안의 화살표와 밖의 원을 서로 다른 색상을 적용을 시켜줘야 되어야했다.![[attachments/Docthru-svg-sprite-method.png]]ㄴ
 
+![[attachments/Docthru-svg-sprite-method-1.png]]
 그래서 수동으로 원부분과 화살표 아이콘을 따로 svg 파일로 분리해서 sprite에 넣고
 컴포넌트에서 조합을 하였다.
 
@@ -300,7 +300,7 @@ export default function FeedbackForm({ id }) {
 
 ## 개발 여정
 
-- 🌱 초기 아이디어: [[svg-in-js ❌]]
+- 🌱 초기 아이디어: [[My-Garden/Seedlings/avoid-svg-in-js|svg-in-js 피해야 하는 이유]]
 
 ## 참고자료
 

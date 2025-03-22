@@ -1,17 +1,17 @@
 ---
 title: Query Key 관리하기 - query key factories
 description:
-stage: buddings
+stage: evergreen
 date: 2024-12-20
 lastmod: 2025-03-22
 tags:
-  - buddings
+  - evergreen
   - tanstack-query
   - query-key
 category: Library
 enableToc: true
 type: note
-imageNameKey: Buddings
+imageNameKey: posts
 draft: false
 ---
 
@@ -412,7 +412,7 @@ REST API 구조와 유사한 계층적 구조 패턴으로 접근했다.
 
 ### 📝 연관 노트
 
-- 🌱 **Seedling:** [[My-Garden/Seedlings/query-key-factories|query-key-factories | 쿼리 키 팩토리 리서치]]
+- 🌱 **초기 아이디어** [[My-Garden/Seedlings/query-key-factories | QueryKey factory 리서치]]
 
 ---
 
