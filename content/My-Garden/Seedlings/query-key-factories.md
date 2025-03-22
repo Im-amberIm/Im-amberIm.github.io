@@ -1,5 +1,5 @@
 ---
-title:
+title: QueryKey factory
 description:
 stage: seedling
 date: 2024-12-08
@@ -8,7 +8,7 @@ tags:
   - seedlings
   - tanstack-query
   - query-key
-category:
+category: Library
 enableToc: true
 type: note
 imageNameKey: Seedlings
@@ -19,29 +19,94 @@ draft: false
 
 > 배경
 
-쿼리키에 params를 포함하면서 페이지를 param별로 캐싱하려니 좀 더 정돈된 쿼리키 사용이 필요했다. 배열이 길어지다 보니 헷갈리기도 하고, 변수로 중앙에서 관리하는 것이 좋을 것 같았다.
+쿼리키에 params를 포함하면서 페이지를 param별로 캐싱하려니 좀 더 정돈된 쿼리키 사용이 필요했다. 배열이 길어지다 보니 헷갈리기도 하고, 변수로 체계화 시켜서 중앙에서 관리하는 것이 좋을 것 같았다.
 
 ## 🔍 Research
 
-관련 예시를 찾던 도중, Tanstack-query를 관리하는 개발자의 블로그(TkDodo)에서 그가 추천하는 쿼리키 관리 방식에 대한 포스트를 발견했다. [^1]
+관련 예시를 찾던 도중, Tanstack-query를 관리하는 개발자의 블로그(TkDodo)에서 쿼리키 관리 방식에 대한 포스트를 발견했다. [^1]
 
-이 방식은, 배열에 객체를 포함하여 관리하는 방법이다.
-배열로만 관리할 경우 순서가 틀리면 다른 쿼리키로 인식되기 때문에(스코프도 변함), 개발자는 객체를 이용해서 모호한 하위 params/filters 같은 것들을 일관성 있게 관리하는 패턴을 제안한다.
+> TkDodo는 모든 쿼리키를 **배열 안의 단일 객체**로 표현하는 방식을 권장한다.
 
-### 📝 코드 스니핏
+- **모든 쿼리키가 정확히 하나의 객체를 포함한 배열로 구성**
+- **객체 내부에 모든 필요한 데이터를 키-값 쌍으로 표현**
+  - 예: `scope: "todos"`, `entity: "list"`, `id: 5` 등
+
+### TkDodo의 쿼리키 관리 패턴
 
 ```ts
 const todoKeys = {
   // ✅ all keys are arrays with exactly one object
+  // = 모든 키는 한 object를 포함한 배열이다.
   all: [{ scope: "todos" }] as const,
   lists: () => [{ ...todoKeys.all[0], entity: "list" }] as const,
   list: (state: State, sorting: Sorting) => [{ ...todoKeys.lists()[0], state, sorting }] as const,
 }
 ```
 
-### 배열 기반 쿼리키의 한계
+### 쿼리키 팩토리 예시
 
-> 배열에 원시값으로 정의한 쿼리키는 순서가 바뀌면 다른 쿼리로 인식됨 ⚠️
+> 쿼리키들을 배열안에 한 object{key: value}로 사용하는 방식
+
+```ts
+const userKeys = {
+  // 1. 기본 스코프 정의
+  all: [{ scope: "users" }] as const,
+
+  // 2. entity: list 구조 생성
+  lists: () => [{ ...userKeys.all[0], entity: "list" }] as const,
+  list: (filters = {}) => [{ ...userKeys.lists()[0], ...filters }] as const,
+
+  // 이 후 entity 별로 메서드 추가 (예시: detail)
+  details: () => [{ ...userKeys.all[0], entity: "detail" }] as const,
+  detail: (userId) => [{ ...userKeys.details()[0], id: userId }] as const,
+
+  ...
+}
+```
+
+### 메서드 간의 계층 구조
+
+```text
+
+userKeys.all → 기본 도메인 정의
+  ├── userKeys.lists() → 목록 관련 기본 구조
+  │     └── userKeys.list(filters) → 최종 목록 쿼리 (필터 포함)
+  │
+  └── userKeys.details() → 상세 정보 기본 구조
+        └── userKeys.detail(userId) → 특정 사용자 상세 정보
+
+
+```
+
+### 메서드 구조 (Domain > Entity > Query)
+
+#### **1. `userKeys.all` - 기본 스코프**
+
+- 모든 users 관련 쿼리를 한 번에 무효화할 때 유용
+- 반환값: `[{ scope: "users" }]`
+- 예: `queryClient.invalidateQueries({ queryKey: userKeys.all })`
+
+#### **2-1. `userKeys.lists()` - 목록 기본 쿼리키**
+
+- 모든 users의 list(목록) 쿼리키
+- 모든 list 쿼리(필터와 상관없이)를 무효화할 때 사용
+- 반환값: `[{ scope: "users", entity: "list" }]`
+- 예: `queryClient.invalidateQueries({ queryKey: userKeys.lists() })`
+
+#### **2-2. `userKeys.list(filters)` - 필터가 적용된 list 쿼리키**
+
+- 구체적인 필터가 추가된 list 쿼리키
+- 특정 필터 조건의 목록 데이터를 조회하거나 무효화할 때 사용
+- 반환값: `[{ scope: "users", entity: "list", filters }]`
+- 예: 특정 페이지 목록 조회: `useQuery({ queryKey: userKeys.list({ page: 1, limit: 10 }) })`
+
+이 방식대로 단일 객체로 관리하면 쿼리를 쉽게 그룹화 할 수 있고, 객체의 properties를 기반으로 부분 일치 검색(deep partial matching)을 더 쉽게 할 수 있다.
+Tanstack-query 공식문서[^2]에 따르면 `invalidateQueries`나 `removeQueries` 같은 메서드를 사용할 때 deep partial matching 알고리즘을 사용한다. 이 알고리즘은 쿼리키의 prefix(접두사) 기반으로 작동하기 때문에 배열의 첫 부분부터 순서가 일치해야 한다. 즉, 캐시된 퀴리키의 시작부분이 무효화하려는 패턴과 정확히 일치해야 된다.
+그래서 이 같이 한 object에 key: value 형식으로 관리하면 명명된 속성(key)으로 바로 접근 가능하기 때문에 순서와 상관없이 더 정교하게 무효화를 시킬 수 있다.
+
+#### 첫 번째 요소가 원시값일 때의 한계
+
+> 배열 prefix를 기반으로 매칭하기 때문에 원시값으로 정의한 쿼리키는 순서가 바뀔시 다른 쿼리로 인식됨 ⚠️
 
 ```ts
 const getAllUsers = useQuery(["users"])
@@ -53,37 +118,10 @@ const getUserFollowers = useQuery(["users", userId, "followers"])
 const userPostsWrong = useQuery(["posts", userId, "users"])
 ```
 
-### 쿼리키 팩토리 예시
+### 쿼리 비교 알고리즘
 
-> 배열의 첫번째 요소를 객체{key: value}로 사용
-
-```ts
-// 쿼리키 팩토리
-const userKeys = {
-  // 기본 스코프
-  // 배열에 객체를 포함하여 관리
-  all: [{ scope: "users" }] as const,
-
-  // 목록 관련
-  lists: () => [{ ...userKeys.all[0], entity: "list" }] as const,
-  list: (filters = {}) => [{ ...userKeys.lists()[0], ...filters }] as const,
-
-  // 상세 정보 관련
-  details: () => [{ ...userKeys.all[0], entity: "detail" }] as const,
-  detail: (userId) => [{ ...userKeys.details()[0], id: userId }] as const,
-
-  // 사용자별 하위 엔티티
-  posts: (userId) => [{ ...userKeys.detail(userId)[0], subEntity: "posts" }] as const,
-  followers: (userId) => [{ ...userKeys.detail(userId)[0], subEntity: "followers" }] as const,
-}
-```
-
-이렇게 객체로 관리하면 쿼리를 쉽게 그룹화 할 수 있고 쿼리키의 부분 일치 검색이 가능해진다.
-Tanstack-query 공식문서[^2]에 따르면 쿼리키를 비교할때 deep partial matching을 알고리즘으로 사용해서 prefix로 여러개의 쿼리들을 찾아 한번에 무효화 할 수 있다.
-
-#### 쿼리 비교 알고리즘
-
-[TanStack Query의 깃허브 소스 코드](https://github.com/TanStack/query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/utils.ts#L321-L338)
+> 정확히 어떻게 비교할까?
+> [TanStack Query의 깃허브 소스 코드](https://github.com/TanStack/query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/utils.ts#L321-L338)
 
 ```ts
 // queryKey 비교 알고리즘 (단순화됨)
@@ -113,7 +151,7 @@ function partialDeepEqual(a: any, b: any): boolean {
 }
 ```
 
-이 비교 알고리즘은 **단방향**으로 동작한다는걸 이해하는게 중요했다.
+이 비교 알고리즘은 **단방향**으로 동작한다는걸 이해하는게 중요하다.
 
 TanStack Query는 캐시의 모든 쿼리키들을 순회하면서 각각에 대해:
 
@@ -205,32 +243,42 @@ const fetchTodos = async ({
 
 export const workKey = {
   all: ["works"],
+
   lists: () => [...workKey.all, "list"],
   list: (challengeId, params = {}) => [...workKey.lists(), challengeId, { ...params }],
 
   details: () => [...workKey.all, "detail"],
   detail: (workId) => [...workKey.details(), workId],
+
   feedbacks: (workId) => [...workKey.detail(workId), "feedbacks"],
 }
 ```
 
-```js
-// TkDodo 권장 패턴
-// 첫번째 요소를 객체로 둠.
-// TkDodo는 'scope' 속성으로 데이터 도메인을 표현하고, 'entity' 속성으로 쿼리 타입을 표현함
-;[{ scope: "users", id: 5, entity: "detail" }]
-```
+### 내가 적용한 패턴
 
 ```js
-// 내가 적용한 패턴
-// 첫번째 문자열로 데이터 도메인(또는 DB 엔티티)을 표현하고,
-// 두번째 문자열로 쿼리 타입을 표현함
+// 어차피 매서드로 정의되기 때문에 순서가 보장되어서 {params} 같이 그룹으로 함수에 매개 변수로 넘기는것만 객체화 함.
 ;["works", "list", challengeId, { ...params }]
 ```
 
-페이지 구조가 확실한 계층 구조를 가지고 있어서 단순하게 사용하였고 직관적이여서 이와 같은 방식으로 적용했다.
-예를 들어 작업물(works)의 상세페이지(detail)가 업데이트 되면, 그 상세 페이지로 들어가기전에 fetch했던 작업물들 목록(list)도 업데이트 해야하기 때문에 'list'까지 배열을 가진 쿼리키를 무효화 해서 하위까지 한번에 하는 구조가 나을거라 생각했다.
-어차피 프로젝트의 구조와 규칙이 명확해서 더 직관적인 방법을 적용했고, TkDodo의 방식은 좀 더 복잡한 페이지 구조나 계층이 모호할때 유연하게 쿼리를 처리하기 더 좋아보인다.
+페이지 구조가 확실한 계층 구조를 가지고 있어서 최대한 prefix 기반 매칭을 활용 + 변경이 많은 매개변수는 객체로 그룹화해서 관리했다.
+
+- [0]인덱스: 데이터 도메인(DB 엔티티) - "works"
+- [1]인덱스: 조회 유형 - "list" 또는 "detail"
+- [2]인덱스: 식별자 - challengeId 또는 workId
+- [3]인덱스: 가변적인 매개변수 - {필터링, 정렬, 페이지네이션 등}
+
+이런식으로 REST API의 URL 구조(/works/list/:challengeId?param1=value1)와 유사한 구조이기 때문에 나에겐 가독성이 더 나았다.
+어차피 프로젝트 사이즈도 작고 구조와 규칙이 명확해서 이 방식으로 활용했지만, 다음 타입 스크립트로 마이그레이션을 하거나 프로젝트 규모가 커지면 권장되는 방식인 단일 객체를 사용하는 것이 좋을 것 같다.
+
+## 정리
+
+### 🌱 쿼리키 팩토리의 장점
+
+- 쿼리키 관리 중앙화
+- 쿼리키 생성 로직 재사용성
+- 쿼리키 무효화 유연성
+- 타입 안전성
 
 ---
 
