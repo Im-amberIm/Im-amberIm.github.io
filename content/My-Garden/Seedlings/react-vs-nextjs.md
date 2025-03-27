@@ -1,28 +1,25 @@
 ---
-title: Mac 파일 자동화 (with. Python)
-description: 파이썬으로 맥 파일 정리 자동화
+title:
+description:
 stage: seedling
-date: 2025-03-20
-lastmod: 2025-03-20
+date: 2025-03-24
+lastmod: 2025-03-24
 tags:
   - seedling
-category: tech
+category:
 enableToc: true
 type: note
+imageNameKey: Seedlings
 draft: true
 resource:
-  - codeit
 ---
-
-
-
-## 💡 파일 자동화 하면서 파이썬 익히기
 
 > 배경
 
-### 🔍 Research
+Next.js VS React 
+## 🔍 Research
 
--
+
 
 ### 🚩 알게된 것
 
@@ -33,7 +30,7 @@ resource:
 - [ ]
 
 ### 📚 References & Resources
-
+[Refine](https://refine.dev/blog/next-js-vs-react/#introduction)
 ### 📝 연관 노트
 
 - 🌿 **Budding:** [[]]

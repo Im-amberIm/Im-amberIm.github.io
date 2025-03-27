@@ -7,11 +7,7 @@ lastmod: 2025-03-19
 tags:
   - retrospective
   - KPT
-duration:
-  start: YYYY-MM-DD
-  end: YYYY-MM-DD
 enableToc: true
-imageNameKey: viewMyStartup
 ---
 
 ## 첫 팀 프로젝트 회고록 (View My Startup)

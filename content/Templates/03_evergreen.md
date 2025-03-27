@@ -1,15 +1,14 @@
 ---
-title:
-description:
+title: 
+description: 
 stage: evergreen
 date: <% tp.file.creation_date("YYYY-MM-DD") %>
 lastmod: <% tp.file.last_modified_date("YYYY-MM-DD") %>
 tags:
   - evergreen
-category:
-enableToc: true
+category: 
 type: note
-imageNameKey: <% tp.file.folder().split("_").pop() %>
+enableToc: true
 draft: true
 ---
 

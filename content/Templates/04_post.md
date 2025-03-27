@@ -1,24 +1,23 @@
 ---
-title:
-description:
-stage: seedling
+title: 
+description: 
+stage: published
 date: <% tp.file.creation_date("YYYY-MM-DD") %>
 lastmod: <% tp.file.last_modified_date("YYYY-MM-DD") %>
 tags:
-  - seedling
-category:
-enableToc: true
+  - post
+category: 
 type: note
-imageNameKey: <% tp.file.folder().split("_").pop() %>
+enableToc: true
 draft: true
-resource:
 ---
 
 > 배경
 
-## 🔍 Research
+## 토픽
 
--
+
+
 
 ### 🚩 알게된 것
 

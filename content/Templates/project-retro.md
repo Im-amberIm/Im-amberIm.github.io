@@ -1,8 +1,8 @@
 ---
-title:
-description:
+title: 
+description: 
 type: retrospective
-project:
+project: 
 phase: planning/milestone/final
 date: <% tp.file.creation_date("YYYY-MM-DD") %>
 lastmod: <% tp.file.last_modified_date("YYYY-MM-DD") %>
@@ -13,7 +13,6 @@ duration:
   start: YYYY-MM-DD
   end: YYYY-MM-DD
 enableToc: true
-imageNameKey: <% tp.file.folder().split("/").pop() %>
 draft: true
 ---
 

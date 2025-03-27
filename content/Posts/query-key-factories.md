@@ -1,11 +1,11 @@
 ---
 title: Query Key 관리하기 - query key factories
-description:
+description: 
 stage: evergreen
 date: 2024-12-20
 lastmod: 2025-03-22
 tags:
-  - evergreen
+  - post
   - tanstack-query
   - query-key
 category: Library

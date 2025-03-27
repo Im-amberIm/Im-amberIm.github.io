@@ -1,17 +1,12 @@
 ---
-title:
+title: 
 type: retrospective
-project:
+project: 
 date: <% tp.file.creation_date("YYYY-MM-DD") %>
 lastmod: <% tp.file.last_modified_date("YYYY-MM-DD") %>
 tags:
-  - retrospective
   - KPT
-duration:
-  start: YYYY-MM-DD
-  end: YYYY-MM-DD
 enableToc: true
-imageNameKey: <% tp.file.folder().split("/").pop() %>
 draft: true
 ---
 

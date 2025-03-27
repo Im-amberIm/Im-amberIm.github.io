@@ -4,13 +4,14 @@ description: svg 아이콘 최적화 시키기
 type: function
 date: 2024-12-20
 lastmod: 2025-03-18
-start_date: 
-end_date: 
+start_date:
+end_date:
 tags:
+  - post
   - project
-tech_stack: 
-github: 
-live_demo: 
+tech_stack:
+github:
+live_demo:
 enableToc: true
 imageNameKey: "\bDocthru"
 draft: false
@@ -36,30 +37,34 @@ const App = () => <HeartIcon fill="red" />
 2. **기기 다양성 고려**: 최신 고성능 기기에서는 차이가 크게 느껴지지 않을 수 있지만, 전 세계 사용자의 75%는 중저가 기기를 사용한다는 통계를 봤다. 우리는 모든 사용자를 배려해야 한다.
 3. **잘못된 접근법**: SVG는 본질적으로 이미지를 설명하는 XML 태그인데, 이걸 JavaScript로 처리하는 건 형식에 맞지 않다. 그냥 이미지로 다루는 게 더 자연스럽다.
 
-연관노트: [[My Garden/🌱_Seedlings/svg-in-js ❌|svg-in-js ❌]]
-
 ## 대안
 
-1. **Image + SVG 방식** (`<img src='icon.svg'>`):
+#### 1. **Image + SVG 방식** (`<img src='icon.svg'>`):
 
-   - 가장 무난하고 Next의 `<Image>`로 최적화 가능하다
-   - 단점: 동적 CSS 스타일링이 어렵고, 매 아이콘마다 HTTP 요청이 발생한다
+- 장점: 가장 무난하고 Next의 `<Image>`로 최적화 가능
+- 단점: 동적 CSS 스타일링이 어렵고, 매 아이콘마다 HTTP 요청이 발생
 
-2. **인라인 SVG 방식** (SVG 코드를 직접 JSX에 포함):
+#### 2. **SVG in CSS 방식**: CSS 속성을 사용하여 SVG 삽입
 
-   - 장점: 즉시 렌더링되고 CSS 스타일링 가능하다
-   - 단점: 원래 문제였던 JS 번들 크기 증가, DOM 요소 증가로 메모리 성능 저하된다
+`background-image` / `mask-image` 속성 사용 (Data URI)
 
-3. **SVG 스프라이트 방식** (`<use>` 태그로 스프라이트 참조):
-   - 장점: 한 번의 HTTP 요청으로 모든 아이콘을 가져오고, CSS 스타일링도 가능하다
-   - 장점: 브라우저 캐싱 효과와 JS 번들 크기에 영향을 주지 않는다
-   - 결론: 성능과 유연성을 모두 갖춘 최적의 방식이다
+- 장점: HTTP 요청 감소 (data URI 사용 시), CSS 스타일링 용이, JS 번들 크기 감소 가능성
+- 단점: data URI 인코딩 필요, 복잡한 SVG 내부 스타일링 제한, 브라우저 지원 고려 필요
 
-## 해결책 구현
+#### 3. **SVG 스프라이트 방식** (`<use>` 태그로 스프라이트 참조):
 
-이미 프로젝트가 어느정도 진행되었기 때문에 점직적으로 현재 Next의 `<Image>`로 아이콘을 다루는것을 지키며 현재 asset 폴더 구조를 이용해 svg 스프라이트 파일을 생성하는 스크립트를 짰다.
+- 장점: 한 번의 HTTP 요청, 동적 CSS 스타일링 가능, 브라우저 캐싱, JS 번들 크기에 영향 미미.
+- 단점: 스프라이트 파일 생성 및 관리 어려움, 레이어 처리 복잡
 
-여러번의 고난?이 있었지만 **현재 asset 폴더구조를 이용해 icon과 image 모은 스프라이트 파일 생성** 하고 **동적으로 css를 적용**할수 있는 스크립트를 짤 수 있었다.
+**리서치 노트:** [[My-Garden/Seedlings/avoid-svg-in-js|avoid-svg-in-js]]
+
+## 채택한 방식: SVG 스프라이트 방식
+
+**이유**
+현재 차용하고 있는 Next의 `<Image>` 컴포넌트 방식을 유지하면서 점직적으로 도입할수 있는 방식이라 생각했다.
+이미 `<Image>` src에 넣는 SVG 파일 path를 객체로 생성하는 스크립트를 만들어 사용중이여서, Sprite 파일 생성 스크립트를 추가하는것도 어렵지 않을 것 같았다.
+
+여러번의 고난?끝에 **현재 asset 폴더구조를 이용해 icon과 image 모은 스프라이트 파일 생성** 하고 **동적으로 css를 적용**할수 있는 스크립트를 완성했다.
 
 ### 기술 구현:
 
@@ -203,7 +208,7 @@ export default function Svg({
 
 아이콘 자체로 재사용 하려했지 아이콘 내의 요소들을 또 나눠서 그걸 기반으로 또 사용할 생각을 못했었다.
 
-버튼이 이렇게 비활성화 / 활성화 적용이 되어야 하는데 디자인대로 구현시 안의 화살표와 밖의 원을 서로 다른 색상을 적용을 시켜줘야 되어야했다.![[attachments/Docthru-svg-sprite-method.png]]ㄴ
+버튼이 이렇게 비활성화 / 활성화 적용이 되어야 하는데 디자인대로 구현시 안의 화살표와 밖의 원을 서로 다른 색상을 적용을 시켜줘야 되어야했다.![[attachments/Docthru-svg-sprite-method.png]]
 
 ![[attachments/Docthru-svg-sprite-method-1.png]]
 그래서 수동으로 원부분과 화살표 아이콘을 따로 svg 파일로 분리해서 sprite에 넣고

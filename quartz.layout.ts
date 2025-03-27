@@ -35,11 +35,16 @@ export const defaultContentPageLayout: PageLayout = {
       ],
     }),
     Component.Explorer({
-      // Garden 폴더를 탐색기에서 제외
-      filterFn: (node) => !node.slug.startsWith("My-Garden"),
-      // 또는 특정 경로만 표시하도록 설정
-      // folderDefaultState: "closed",
-      // sortFn: ..., // 필요한 경우 정렬 방식도 설정 가능
+      filterFn: (node) => {
+        // attachments 폴더 제외
+        if (node.isFolder && node.displayName === "attachments") {
+          return false
+        }
+        return true
+      },
+      sortFn: (a, b) => {
+        return a.displayName.localeCompare(b.displayName)
+      },
     }),
   ],
   right: [
@@ -75,8 +80,16 @@ export const defaultListPageLayout: PageLayout = {
       ],
     }),
     Component.Explorer({
-      // Garden 폴더를 탐색기에서 제외
-      filterFn: (node) => !node.slug.startsWith("My-Garden"),
+      filterFn: (node) => {
+        // attachments 폴더 제외
+        if (node.isFolder && node.displayName === "attachments") {
+          return false
+        }
+        return true
+      },
+      sortFn: (a, b) => {
+        return a.displayName.localeCompare(b.displayName)
+      },
     }),
   ],
   right: [

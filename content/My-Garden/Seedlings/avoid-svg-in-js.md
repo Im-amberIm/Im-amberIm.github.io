@@ -7,8 +7,8 @@ lastmod: 2025-03-18
 tags:
   - seedling
   - SVG
-  - 성능최적화
-  - 프론트엔드
+  - optimasation
+  - font-end
   - 웹성능
 category: 웹 개발
 enableToc: true
@@ -32,7 +32,7 @@ import HeartIcon from "./HeartIcon.svg"
 const App = () => <HeartIcon fill="red" />
 ```
 
-그러나 리서치 도중, 이렇게 svg를 컴포넌트로 사용할 경우 자바스크립틑 소스 코드내 포함되어 JS 번들 크기를 키운다는 글을 보았다.
+그러나 리서치 도중, 이렇게 SVG를 컴포넌트로 사용할 경우 자바스크립트 소스 코드내 포함되어 JS 번들 크기를 키운다는 글을 보았다.
 
 이렇게 사용하면 개발자는 편하지만, **JavaScript 번들 크기 증가**, **파싱 및 컴파일 오버헤드**, **메모리 사양 증가 등**으로 사용자를 불편하게 하는 방식인 것이다.
 
@@ -47,36 +47,99 @@ const App = () => <HeartIcon fill="red" />
 - 웹 개발은 모든 사용자에게 포용적이어야 함 - 부유한 지역의 사용자만을 위한 것이 아님
 - SVG는 JavaScript가 아니라 이미지를 설명하는 HTML과 유사한 XML 태그로, JS 번들에서 분리하여 파싱 및 컴파일 단계에서 제외해야 함
 
-### 2. SVG 처리 방식 비교
+#### 그럼 어떻게 JS 크기를 증가시키지?
 
-1. **Image + SVG 방식**: `<img src='icon.svg'>`
+**JavaScript 번들:** JavaScript 번들은 React 애플리케이션의 JavaScript 코드, CSS (CSS-in-JS 라이브러리 사용 시), 그리고 빌드 과정에서 처리된 이미지 등의 자산을 포함한다.
 
-   - **장점**: 브라우저 캐싱 활용, HTTP/2에서 효율적 로딩, JS 번들 크기에 영향 없음
-   - **단점**: CSS로 내부 스타일링 어려움, 동적 색상 변경 제한적, 각 아이콘마다 HTTP 요청 필요
-   - **성능 데이터**: Cloud Four의 테스트에서 300개 아이콘 렌더링 시 가장 빠른 로드 시간을 보임
+JSX는 HTML의 확장된 문법이기 때문에 트랜스파일 될때 JS 코드로 변환된다. 이때 `React.createElement`함수 호출 형태로 변화된다.
 
-2. **인라인 SVG 방식**: 직접 SVG 코드를 JSX에 포함
+```js
+// 컴포넌트에 그대로 사용한 svg는
+const MySVG = () => (
+  <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+    {" "}
+    <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="3" fill="blue" />{" "}
+  </svg>
+)
+```
 
-   - **장점**: 즉시 렌더링, CSS 스타일링 용이, JavaScript로 직접 조작 가능
-   - **단점**: JS 번들 크기 증가, DOM 요소 증가로 메모리 사용량 증가, 파싱/컴파일 오버헤드
-   - **성능 데이터**: 소수의 아이콘만 필요한 경우 합리적이지만, 아이콘 수가 증가할수록 성능이 급격히 저하됨
+```js
+// 이렇게 JS로 변환됨
+const MySVG = () =>
+  React.createElement(
+    "svg",
+    { width: "100", height: "100", xmlns: "http://www.w3.org/2000/svg" },
+    React.createElement("circle", {
+      cx: "50",
+      cy: "50",
+      r: "40",
+      stroke: "black",
+      strokeWidth: "3",
+      fill: "blue",
+    }),
+  )
+```
 
-3. **SVG 스프라이트 방식**: `<use>` 태그로 외부 스프라이트 참조
-   - **장점**: 앞선 두 방식의 장점을 모두 가짐, 한 번의 HTTP 요청으로 모든 아이콘 로드, JS 번들 크기에 영향 없음, CSS 스타일링 가능, 브라우저 캐싱 효과적 활용
-   - **결론**: 성능과 유연성 모두에서 최적의 방식
-   - **성능 데이터**: 많은 아이콘을 사용할 때 메모리 사용량과 렌더링 성능 면에서 가장 효율적
+**이 모든 SVG가 JS 번들에 포함되기 때문에 사이즈가 증가되 성능을 저하시킨다**
 
-### 채택한 방식: svg 스프라이트 기법
+### 2. 대체 SVG 처리 방식 비교
 
-> 동적 변경 가능 && 한번 로드된 svg 파일로 재사용 가능 (캐싱).
+#### 1. **Image + SVG 방식**: `<img src='icon.svg'>`
 
-- SVG 스프라이트는 여러 SVG 아이콘을 하나의 파일로 합친후 `<symbol>`과`<use>` 태그로 참조 사용한다.
-- 각 아이콘은 `<symbol>` 태그로 정의되고 고유 ID를 가지며, HTML에서는 `<use>` 요소를 통해 참조한다.
+- **장점**: 브라우저 캐싱 활용, HTTP/2에서 효율적 로딩, JS 번들 크기에 영향 없음
+- **단점**: CSS로 내부 스타일링 어려움, 동적 색상 변경 제한적, 각 아이콘마다 HTTP 요청 필요
+- **성능 데이터**: Cloud Four의 테스트에서 300개 아이콘 렌더링 시 가장 빠른 로드 시간을 보임
 
-이 방법은 옛날 이미지를 스프라이트 해서 쓰던 방식처럼 한 svg 파일에 프로젝트에서 사용되는 모든 아이콘 svg를 넣고 한번에 로드 한 뒤,`<use>`와 <`symbol>`을 사용해서 부분적으로 참조해서 사용하는 방식이다.
-이 방식은 img 태그를 사용했을때의 최적화 장점 포함, 동적으로 js 없이 css 스타일도 적용할 수 있다.
+#### 2. **SVG in CSS 방식**: CSS 속성을 사용하여 SVG 삽입
 
-**스프라이트 파일 예시**:
+`background-image` / `mask-image` 속성 사용 (Data URI) + root에서 SVG 변수화해 사용.
+
+```js
+
+:root {
+  --icon-heart: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+}
+
+.heart-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: var(--icon-heart);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+```
+
+- **장점**: HTTP 요청 감소 (data URI 사용 시), CSS 스타일링 용이 (background-color, mask-image 등 활용), JS 번들 크기 감소 가능성
+- **단점**: data URI 인코딩 필요, 복잡한 SVG 내부 스타일링 제한, 브라우저 지원 고려 필요
+- **성능 데이터**: 아이콘 개수와 스타일에 따라 성능이 달라질 수 있음
+
+#### 3. **SVG 스프라이트 방식**: `<use>` 태그로 외부 스프라이트 참조
+
+- **장점**: 한 번의 HTTP 요청으로 모든 아이콘 로드, JS 번들 크기에 영향 크게 없음, CSS 스타일링 가능, 브라우저 캐싱 활용 가능
+- **결론**: 성능과 유연성 모두에서 최적의 방식
+- **성능 데이터**: 많은 아이콘을 사용할 때 메모리 사용량과 렌더링 성능 면에서 가장 효율적
+
+#### `SVG-in-CSS` vs `SVG Sprite`
+
+> 고려 사항 우선순위: 동적 변경 가능 && 한번 로드된 SVG 파일로 재사용 가능 (캐싱) && 재사용성 (컴포넌트화 용이 포함)
+
+SVG in CSS도 방식도 css 파일이 브라우저에 캐싱되서 효율적이고 JS 번들 사이즈를 최적화 시켜주지만, 아래와 같은 우려사항이 있다.
+
+- 무의미한 `<span>`을 사용해야함. `<svg>`가 더 의미론적임 (벡터 그래픽 콘텐츠로 명확하게 인식)
+- SVG를 다 root변수로 정의하면 css 파일이 커저 CSSOM 크기 증가 우려. (메로리 사용량 증가)
+- data URI 형태로 인코딩 하는 과정이 오버헤드 일수 있음
+
+### 채택한 방식: SVG Sprite 방식 🎉
+
+이 방법은 옛날 이미지를 스프라이트 해서 쓰던 방식과 유사하다.
+한 SVG Sprite 파일에 프로젝트에서 사용되는 모든 SVG를 `<symbol>` 사용해 병합한다. 이는 HTTP 요청을 한번만 요구하고 ,`<use>`을 사용해서 부분적으로 참조해서 사용하는 방식이다.
+이 방식은 img 태그를 사용했을때의 최적화 장점 포함, 동적으로 JS 없이 css 스타일도 적용할 수 있다.
+
+#### 적용 방법
+
+1. **외부 스프라이트 파일** : `<symbol>`과 `id`를 사용해 모든 SVG파일을 병합
 
 ```xml
 // icon-sprite.svg
@@ -94,39 +157,35 @@ const App = () => <HeartIcon fill="red" />
 </svg>
 ```
 
-**코드 내 사용 예시**:
+**`<use>`사용해 스프라이트 파일에서 svg 심볼 참조**:
 
 ```html
-// Component.jsx
 <svg width="24" height="24">
   <use href="/assets/icons.svg#icon-heart"></use>
 </svg>
 ```
 
-**세 가지 주요 구현 방법**:
+**아이콘 재사용성 위해 `<Svg>` 로 컴포넌트화**
 
-1. **외부 스프라이트 파일**: 별도의 SVG 파일로 저장하고 `<use>` 태그의 `href` 속성으로 참조
+```js
+export default function Svg({ name, type, prefix }) {
+  return (
+    <svg aria-label={name}>
+      // name으로 id 참조
+      <use href={`/assets/${type}s_sprite.svg/#${prefix}_${name}`} />
+    </svg>
+  )
+}
+```
 
-   ```html
-   <svg><use href="/path/to/sprites.svg#icon-id"></use></svg>
-   ```
+### 잠깐, 잠깐 ☝️ JSX로 컴포넌트화해서 사용하면 결국 JS번들에 포함 되는거 아니야??
 
-2. **인라인 스프라이트**: HTML 문서에 스프라이트를 직접 포함시키고 `<use>` 태그로 참조
+맞다. `<svg> + <use>`를 컴포넌트화 해서 작성한 코드는 JS 코드로 변환되 번들에 포함된다.
 
-   ```html
-   <svg style="display:none">
-     <!-- 여기에 symbol 태그들 -->
-   </svg>
-   <svg><use href="#icon-id"></use></svg>
-   ```
+그러나 `<svg>`, `<use>` 요소만 변환되고 use가 참조하는 SVG 외부 스프라이트 시트에서 가져오기 때문에 SVG의 그 모든 path와 속성이 번들에 추가가 안되는것만 으로도 번들 크기를 줄이는데 효과적이다.
+그리고 외부 SVG 파일은 브라우저에 캐싱되기떄문에 동일안 아이콘을 써도 HTTP 요청을 한번만 한다.
 
-3. **CSS Mask/Background 방식**: SVG를 CSS 마스크나 배경으로 사용
-   ```css
-   .icon-heart {
-     mask-image: url("sprites.svg#icon-heart");
-     background-color: currentColor;
-   }
-   ```
+그리고, JSX에서 SVG를 직접 넣었을 때 번들이 더 커지고 컴포넌트를 사용할때마다 JS 번들에 포함되 코드 중복으로 번들 사이즈가 커진다.
 
 ### 🚩 알게된 것
 
@@ -234,4 +293,4 @@ function App() {
 
 ### 📝 연관 노트
 
--  실제 적용 => [[SVG 아이콘 최적화 시키기 (feat. sprite)]]
+- 실제 적용 => [[SVG 아이콘 최적화 시키기 (feat. sprite)]]

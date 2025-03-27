@@ -1,14 +1,18 @@
 ---
-title: 
-description: 
+title: 회고록
+description: 독스루 프로젝트 회고록
 type: project
-date: <% tp.file.creation_date("YYYY-MM-DD") %>
-lastmod: <% tp.file.last_modified_date("YYYY-MM-DD") %>
-start_date: 
-end_date: 
+date: 2025-03-24
+lastmod: 2025-03-24
+start_date: 2024-10-08
+end_date: 2024-10-31
 tags:
   - project
-tech_stack: 
+tech_stack:
+  - Next.js
+  - React
+  - Tanstack-Query
+  - React-Quill
 github: 
 live_demo: 
 enableToc: true
@@ -29,9 +33,12 @@ draft: true
 
 <!-- 아키텍처, 기술 스택, 구현 세부사항 -->
 
-### 아키텍처
+### CI/ CD 아키텍처
 
 -
+### Sequence Diagram
+
+### 특정 알고리즘이 있다면 그 알고리즘 적용
 
 ### 사용 기술
 
@@ -46,6 +53,8 @@ draft: true
 <!-- 직면한 주요 과제와 해결 방법 -->
 
 ### 도전 과제 1
+Cookie로 accessToken을 받는데 개발환경에서 받기가 힘들었던것.
+CORS 문제
 
 **문제:**
 **해결:**
