@@ -1,0 +1,22 @@
+.DS_Store
+node_modules
+public
+prof
+tsconfig.tsbuildinfo
+.quartz-cache
+private/
+.replit
+replit.nix
+
+# Obsidian files
+content/.obsidian/
+
+# Quartz documentation
+docs
+
+# Personal files
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp

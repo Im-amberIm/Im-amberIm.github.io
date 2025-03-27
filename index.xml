@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>Dev Garden</title>
+      <link>https://im-amberim.github.io</link>
+      <description>최근 10 건 on Dev Garden</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>개발 문제 해결 과정</title>
+    <link>https://im-amberim.github.io/Projects/viewMyStartup/retrospective</link>
+    <guid>https://im-amberim.github.io/Projects/viewMyStartup/retrospective</guid>
+    <description>첫 팀 프로젝트 회고록 (View My Startup) 문제점 단위로 3주간 노트했던것을 정리해봤습니다. 개발적 이슈 외, 팀 협업에서 팀 소통과 본딩이 중요 하다는것을 다시 한번 깨달았습니다.</description>
+    <pubDate>Thu, 21 Aug 2025 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>개발 과정 중 직면한 문제 정리</title>
+    <link>https://im-amberim.github.io/My-Garden/Seedlings/retro-view-my-startup</link>
+    <guid>https://im-amberim.github.io/My-Garden/Seedlings/retro-view-my-startup</guid>
+    <description>초급 프로젝트 회고록 Week 1 문제: BigInt Type 직렬화 TypeError: Do not know how to serialize a BigInt 에러 해결 // 방법 1: prototype 확장 BigInt.prototype.toJSON = function () { return { $bigint: this.toString() } } // 방법 2: stringify replacer 사용 function bigIntToString(data) { return JSON.stringify(data, (key, value) =&...</description>
+    <pubDate>Sun, 10 Aug 2025 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>My Garden</title>
+    <link>https://im-amberim.github.io/My-Garden/</link>
+    <guid>https://im-amberim.github.io/My-Garden/</guid>
+    <description>Amber’s Dev-log 🌱🌿🌳 간단한 메모에서 시작해 개선해 나가는 디지털 정원입니다. 🌱 씨앗 단계 (Seedlings) 새롭게 발견한 아이디어와 질문들이 싹트는 곳입니다. 아직 초기 단계의 생각들이 자라나기 시작하는 공간입니다.</description>
+    <pubDate>Fri, 21 Mar 2025 18:23:46 GMT</pubDate>
+  </item><item>
+    <title>Books</title>
+    <link>https://im-amberim.github.io/Books/</link>
+    <guid>https://im-amberim.github.io/Books/</guid>
+    <description>독서 노트 📚 읽고 배운 내용을 정리하는 공간입니다.</description>
+    <pubDate>Fri, 21 Mar 2025 18:06:12 GMT</pubDate>
+  </item><item>
+    <title>Posts</title>
+    <link>https://im-amberim.github.io/Posts/</link>
+    <guid>https://im-amberim.github.io/Posts/</guid>
+    <description>글 모음 📝 이곳은 제가 정리한 지식과 생각들을 공유하는 공간입니다. 개발 과정에서 배운 것들, 문제 해결 방법, 그리고 다양한 기술적 주제에 대한 글들을 찾아보실 수 있습니다. 글을 통해 제 경험이 여러분에게도 도움이 되길 바랍니다.</description>
+    <pubDate>Fri, 21 Mar 2025 17:55:17 GMT</pubDate>
+  </item><item>
+    <title>Projects</title>
+    <link>https://im-amberim.github.io/Projects/</link>
+    <guid>https://im-amberim.github.io/Projects/</guid>
+    <description>프로젝트 🚀 Documentation and retrospectives for my projects.</description>
+    <pubDate>Fri, 21 Mar 2025 17:38:58 GMT</pubDate>
+  </item><item>
+    <title>Dev Garden</title>
+    <link>https://im-amberim.github.io/</link>
+    <guid>https://im-amberim.github.io/</guid>
+    <description>Welcome to Amber’s Dev-garden 🌱🌿🌳 Blog가 아닌 Digital Garden으로 완벽이란 부담을 내려놓고 성장하는 글을 쓰는 곳입니다. 초안 부터 완성 까지 모든 단계의 글을 적습니다.</description>
+    <pubDate>Fri, 21 Mar 2025 17:38:40 GMT</pubDate>
+  </item><item>
+    <title>🌱 Seedlings</title>
+    <link>https://im-amberim.github.io/My-Garden/Seedlings/</link>
+    <guid>https://im-amberim.github.io/My-Garden/Seedlings/</guid>
+    <description>초기 생각들 (Seedlings) 🌱 이 문서는 초기 단계의 아이디어입니다 아직 정리되지 않은 생각들이나 궁금한 질문들을 담고 있습니다.</description>
+    <pubDate>Thu, 20 Mar 2025 09:32:34 GMT</pubDate>
+  </item><item>
+    <title>🌳 Evergreens</title>
+    <link>https://im-amberim.github.io/My-Garden/Evergreens/</link>
+    <guid>https://im-amberim.github.io/My-Garden/Evergreens/</guid>
+    <description>완성된 생각들 (Evergreens) 🌳 완성된 문서 이 공간의 글들은 충분한 고민과 발전을 거쳐 정리된 것들입니다. 하지만 여전히 새로운 인사이트가 더해질 수 있습니다.</description>
+    <pubDate>Thu, 20 Mar 2025 09:32:16 GMT</pubDate>
+  </item><item>
+    <title>🌿 Buddings</title>
+    <link>https://im-amberim.github.io/My-Garden/Buddings/</link>
+    <guid>https://im-amberim.github.io/My-Garden/Buddings/</guid>
+    <description>성장 단계의 생각들 (Buddings) 🌿 성장하는 문서 이 공간의 글들은 지속적으로 발전하고 있습니다. 완성되지 않은 생각들이 자라나는 과정을 담고 있습니다.</description>
+    <pubDate>Thu, 20 Mar 2025 09:32:08 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>

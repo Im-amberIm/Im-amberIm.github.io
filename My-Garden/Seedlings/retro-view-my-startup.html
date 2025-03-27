@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko"><head><title>개발 과정 중 직면한 문제 정리</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=Schibsted Grotesk:wght@400;700&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Dev Garden"/><meta property="og:title" content="개발 과정 중 직면한 문제 정리"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="개발 과정 중 직면한 문제 정리"/><meta name="twitter:description" content="초급 프로젝트 회고록 Week 1 문제: BigInt Type 직렬화 TypeError: Do not know how to serialize a BigInt 에러 해결 // 방법 1: prototype 확장 BigInt.prototype.toJSON = function () { return { $bigint: this.toString() } } // 방법 2: stringify replacer 사용 function bigIntToString(data) { return JSON.stringify(data, (key, value) =&amp;..."/><meta property="og:description" content="초급 프로젝트 회고록 Week 1 문제: BigInt Type 직렬화 TypeError: Do not know how to serialize a BigInt 에러 해결 // 방법 1: prototype 확장 BigInt.prototype.toJSON = function () { return { $bigint: this.toString() } } // 방법 2: stringify replacer 사용 function bigIntToString(data) { return JSON.stringify(data, (key, value) =&amp;..."/><meta property="og:image:alt" content="초급 프로젝트 회고록 Week 1 문제: BigInt Type 직렬화 TypeError: Do not know how to serialize a BigInt 에러 해결 // 방법 1: prototype 확장 BigInt.prototype.toJSON = function () { return { $bigint: this.toString() } } // 방법 2: stringify replacer 사용 function bigIntToString(data) { return JSON.stringify(data, (key, value) =&amp;..."/><meta property="og:image" content="https://im-amberim.github.io/static/og-image.png"/><meta property="og:image:url" content="https://im-amberim.github.io/static/og-image.png"/><meta name="twitter:image" content="https://im-amberim.github.io/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="og:image:alt" content="Modified from Figma asset"/><meta name="image:attribution" content="Based on Figma asset by kate in design, modified by Amber. used in favicon and og image"/><meta name="image:license" content="CC BY 4.0"/><meta name="image:source" content="https://www.figma.com/community/file/1453154145818723604"/><meta property="twitter:domain" content="im-amberim.github.io"/><meta property="og:url" content="https://im-amberim.github.io/My-Garden/Seedlings/retro-view-my-startup"/><meta property="twitter:url" content="https://im-amberim.github.io/My-Garden/Seedlings/retro-view-my-startup"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="초급 프로젝트 회고록 Week 1 문제: BigInt Type 직렬화 TypeError: Do not know how to serialize a BigInt 에러 해결 // 방법 1: prototype 확장 BigInt.prototype.toJSON = function () { return { $bigint: this.toString() } } // 방법 2: stringify replacer 사용 function bigIntToString(data) { return JSON.stringify(data, (key, value) =&amp;..."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL1VzZXJzL2FtYmVyaW0vRG9jdW1lbnRzL0NvZGluZy9zdHVkeS9kZXYtZ2FyZGVuL3F1YXJ0ei9xdWFydHovY29tcG9uZW50cy9zdHlsZXMiLCJzb3VyY2VzIjpbIm1lcm1haWQuaW5saW5lLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUdGO0VBQ0U7OztBQUtGO0VBQ0U7RUFDQTs7O0FBSUo7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBSUo7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7O0FBSUY7RUFDRTtFQUNBO0VBQ0EiLCJzb3VyY2VzQ29udGVudCI6WyIuZXhwYW5kLWJ1dHRvbiB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxvYXQ6IHJpZ2h0O1xuICBwYWRkaW5nOiAwLjRyZW07XG4gIG1hcmdpbjogMC4zcmVtO1xuICByaWdodDogMDsgLy8gTk9URTogcmlnaHQgd2lsbCBiZSBzZXQgaW4gbWVybWFpZC5pbmxpbmUudHNcbiAgY29sb3I6IHZhcigtLWdyYXkpO1xuICBib3JkZXItY29sb3I6IHZhcigtLWRhcmspO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gIGJvcmRlcjogMXB4IHNvbGlkO1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIG9wYWNpdHk6IDA7XG4gIHRyYW5zaXRpb246IDAuMnM7XG5cbiAgJiA+IHN2ZyB7XG4gICAgZmlsbDogdmFyKC0tbGlnaHQpO1xuICAgIGZpbHRlcjogY29udHJhc3QoMC4zKTtcbiAgfVxuXG4gICY6aG92ZXIge1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBib3JkZXItY29sb3I6IHZhcigtLXNlY29uZGFyeSk7XG4gIH1cblxuICAmOmZvY3VzIHtcbiAgICBvdXRsaW5lOiAwO1xuICB9XG59XG5cbnByZSB7XG4gICY6aG92ZXIgPiAuZXhwYW5kLWJ1dHRvbiB7XG4gICAgb3BhY2l0eTogMTtcbiAgICB0cmFuc2l0aW9uOiAwLjJzO1xuICB9XG59XG5cbiNtZXJtYWlkLWNvbnRhaW5lciB7XG4gIHBvc2l0aW9uOiBmaXhlZDtcbiAgY29udGFpbjogbGF5b3V0O1xuICB6LWluZGV4OiA5OTk7XG4gIGxlZnQ6IDA7XG4gIHRvcDogMDtcbiAgd2lkdGg6IDEwMHZ3O1xuICBoZWlnaHQ6IDEwMHZoO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBkaXNwbGF5OiBub25lO1xuICBiYWNrZHJvcC1maWx0ZXI6IGJsdXIoNHB4KTtcbiAgYmFja2dyb3VuZDogcmdiYSgwLCAwLCAwLCAwLjUpO1xuXG4gICYuYWN0aXZlIHtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIH1cblxuICAmID4gI21lcm1haWQtc3BhY2Uge1xuICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICAgIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgdG9wOiA1MCU7XG4gICAgbGVmdDogNTAlO1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC01MCUsIC01MCUpO1xuICAgIGhlaWdodDogODB2aDtcbiAgICB3aWR0aDogODB2dztcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRlbnQge1xuICAgICAgcGFkZGluZzogMnJlbTtcbiAgICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICAgIHRyYW5zZm9ybS1vcmlnaW46IDAgMDtcbiAgICAgIHRyYW5zaXRpb246IHRyYW5zZm9ybSAwLjFzIGVhc2U7XG4gICAgICBvdmVyZmxvdzogdmlzaWJsZTtcbiAgICAgIG1pbi1oZWlnaHQ6IDIwMHB4O1xuICAgICAgbWluLXdpZHRoOiAyMDBweDtcblxuICAgICAgcHJlIHtcbiAgICAgICAgbWFyZ2luOiAwO1xuICAgICAgICBib3JkZXI6IG5vbmU7XG4gICAgICB9XG5cbiAgICAgIHN2ZyB7XG4gICAgICAgIG1heC13aWR0aDogbm9uZTtcbiAgICAgICAgaGVpZ2h0OiBhdXRvO1xuICAgICAgfVxuICAgIH1cblxuICAgICYgPiAubWVybWFpZC1jb250cm9scyB7XG4gICAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgICBib3R0b206IDIwcHg7XG4gICAgICByaWdodDogMjBweDtcbiAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICBnYXA6IDhweDtcbiAgICAgIHBhZGRpbmc6IDhweDtcbiAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICBib3JkZXItcmFkaXVzOiA2cHg7XG4gICAgICBib3gtc2hhZG93OiAwIDJweCA0cHggcmdiYSgwLCAwLCAwLCAwLjEpO1xuICAgICAgei1pbmRleDogMjtcblxuICAgICAgLm1lcm1haWQtY29udHJvbC1idXR0b24ge1xuICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgICAgICAgd2lkdGg6IDMycHg7XG4gICAgICAgIGhlaWdodDogMzJweDtcbiAgICAgICAgcGFkZGluZzogMDtcbiAgICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgICBjb2xvcjogdmFyKC0tZGFyayk7XG4gICAgICAgIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgICAgICBmb250LXNpemU6IDE2cHg7XG4gICAgICAgIGZvbnQtZmFtaWx5OiB2YXIoLS1ib2R5Rm9udCk7XG4gICAgICAgIHRyYW5zaXRpb246IGFsbCAwLjJzIGVhc2U7XG5cbiAgICAgICAgJjpob3ZlciB7XG4gICAgICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgfVxuXG4gICAgICAgICY6YWN0aXZlIHtcbiAgICAgICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoMXB4KTtcbiAgICAgICAgfVxuXG4gICAgICAgIC8vIFN0eWxlIHRoZSByZXNldCBidXR0b24gZGlmZmVyZW50bHlcbiAgICAgICAgJjpudGgtY2hpbGQoMikge1xuICAgICAgICAgIHdpZHRoOiBhdXRvO1xuICAgICAgICAgIHBhZGRpbmc6IDAgMTJweDtcbiAgICAgICAgICBmb250LXNpemU6IDE0cHg7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG4gIH1cbn1cbiJdfQ== */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://im-amberim.github.io/index.xml"/></head><body data-slug="My-Garden/Seedlings/retro-view-my-startup"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Dev Garden</a></h2><div class="spacer mobile-only"></div><div style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><p>검색</p><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>a.displayName.localeCompare(b.displayName)&quot;,&quot;filterFn&quot;:&quot;node=>!(node.isFolder&amp;&amp;node.displayName===\&quot;attachments\&quot;)&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-content"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>탐색기</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="explorer-content" aria-expanded="false"><ul class="explorer-ul overflow" id="3rbo1g"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../My-Garden/">My Garden</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../My-Garden/Seedlings/">🌱 Seedlings</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>개발 과정 중 직면한 문제 정리</a></div></nav><h1 class="article-title">개발 과정 중 직면한 문제 정리</h1><p show-comma="true" class="content-meta"><time datetime="2025-08-10T00:00:00.000Z">2025년 8월 10일</time><span>14 min read</span></p><ul class="tags"><li><a href="../../tags/seedling" class="internal tag-link">seedling</a></li></ul></div></div><article class="popover-hint"><h1 id="초급-프로젝트-회고록">초급 프로젝트 회고록<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#초급-프로젝트-회고록" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="week-1">Week 1<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="문제-bigint-type-직렬화">문제: BigInt Type 직렬화<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-bigint-type-직렬화" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><code>TypeError: Do not know how to serialize a BigInt</code> 에러 해결</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="js" data-theme="github-light github-dark"><code data-language="js" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// 방법 1: prototype 확장</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">BigInt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">prototype</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">toJSON</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> function</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> () {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { $bigint: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">toString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// 방법 2: stringify replacer 사용</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">function</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> bigIntToString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">data</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> JSON</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">stringify</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(data, (</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=></span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    typeof</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> value </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">===</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;bigint&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ?</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> value.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">toString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> value,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// 방법 3: map으로 직접 변환 (최종 채택)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> bigIntToString</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> companies.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">map</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">((</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">company</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ({</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  ...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">company,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  actualInvestment: company.actualInvestment.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">toString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  revenue: company.revenue.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">toString</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}))</span></span></code></pre></figure>
+<ul>
+<li><code>JSON.stringify</code>만 사용시 Content-Type이 ‘text/html’로 설정되는 문제 발견</li>
+<li>해결책으로 <code>map</code> 사용 방식 채택 (가장 직관적이고 효율적)</li>
+<li>필요한 경우 <code>res.setHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)</code> 설정</li>
+</ul>
+<p>참고: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#use_within_json" class="external">MDN BigInt JSON<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>, <a href="https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types#serializing-bigint" class="external">Prisma BigInt<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<h3 id="문제-테이블-cell에서-ellipsis-적용-안됨">문제: 테이블 cell에서 ellipsis 적용 안됨<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-테이블-cell에서-ellipsis-적용-안됨" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="css" data-theme="github-light github-dark"><code data-language="css" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">.TableRow</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> .description</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  max-width</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">301</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  width</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">100</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">%</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">.TableRow</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> .description</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> span</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  display</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">-webkit-box</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -webkit-box-orient</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">vertical</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -webkit-line-clamp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  overflow</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">hidden</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  text-overflow</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">ellipsis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  white-space</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">normal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<ul>
+<li>td cell에서 직접 line-clamp가 안되어서 span으로 감싸서 해결함</li>
+<li><code>line-clamp</code>를 사용하기 위해서는 블록 레벨 요소가 필요하므로, 이를 위해 <code>td</code> 내에 <code>span</code>으로 감싸서 <code>-webkit-box</code> 로 문제를 해결함. td는 블록레벨 요소나 -webkit-box같은 레이아웃 모델을 적용할수 없음</li>
+<li>ellipsis 적용을 위해 <code>overflow: hidden</code>과 <code>white-space: nowrap</code> 필수</li>
+</ul>
+<h3 id="문제-테이블-border-radius-이슈">문제: 테이블 border-radius 이슈<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-테이블-border-radius-이슈" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="css" data-theme="github-light github-dark"><code data-language="css" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">.Table</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> thead</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> tr</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> th</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">:first-child</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  border-bottom-left-radius</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">.Table</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> thead</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> tr</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> th</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">:last-child</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  border-bottom-right-radius</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">.Table</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> tbody</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> tr</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">:first-child</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> td</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">:first-child</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  border-top-left-radius</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">.Table</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> tbody</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> tr</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">:first-child</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;"> td</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">:last-child</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  border-top-right-radius</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">4</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">px</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<ul>
+<li>태블릿 사이즈에서 첫 컬럼이 display:none 되면서 border-radius가 사라지는 문제 해결</li>
+<li>thead와 tbody 각각에 border-radius 적용하여 해결</li>
+</ul>
+<p>참고: <a href="https://m.blog.naver.com/tcloe8/221630141872" class="external">테이블 z-index<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<h3 id="문제-페이지네이션-방식-선택">문제: 페이지네이션 방식 선택<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-페이지네이션-방식-선택" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>디자인은 offset 기반인데 요구사항은 cursor 기반이라 고민</li>
+<li>결론: offset 기반으로 변경
+<ul>
+<li>cursor 기반 유지시 서버에서 5페이지치 데이터 미리 조회 필요</li>
+<li>실제 이점이 크지 않아 디자인과의 일관성 선택</li>
+</ul>
+</li>
+</ul>
+<h2 id="week-2-3">Week 2-3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-2-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="테이블-드롭다운-버튼-페이지네이션-공통-컴포넌트화">테이블, 드롭다운 버튼, 페이지네이션 공통 컴포넌트화<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#테이블-드롭다운-버튼-페이지네이션-공통-컴포넌트화" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="고민">고민<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#고민" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>각 테이블마다 필요한 필드가 다르고 렌더방식도 상이함</p>
+<h4 id="해결">해결<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#해결" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>각 필드를 체크해서 필드종류에 따라 유연하게 렌더링 하는 방식으로 접근.</p>
+<ul>
+<li>
+<p><strong>Table 컴포넌트</strong></p>
+<ul>
+<li><strong>기능</strong>: 테이블의 전반적인 구조를 담당하며, <code>list</code>와 <code>tableHeaders</code>를 받아 동적으로 테이블을 생성.</li>
+<li><strong>설계 요소</strong>: 데이터 유효성 검사를 통해 리스트가 없거나 잘못된 형식의 데이터를 처리. <code>tableHeaders</code>를 기반으로 <code>thead</code>와 <code>tbody</code>를 생성하여 각 셀은 <code>TableData</code>로 렌더링, 필드별로 다른 스타일과 기능을 지원.</li>
+</ul>
+</li>
+<li>
+<p><strong>TableData 컴포넌트</strong></p>
+<ul>
+<li><strong>기능</strong>: 각 셀의 데이터를 렌더링하며, <code>header</code>와 <code>item</code>을 받아 특정 필드에 따라 적절한 렌더링 수행.</li>
+<li><strong>설계 요소</strong>: <code>renderTableData</code> 함수를 사용해 필드별 스타일과 기능을 조건부로 렌더링. 예를 들어, 기업명 필드는 로고와 링크를 표시하고, 투자 금액 필드는 포맷 변환을 적용.</li>
+</ul>
+</li>
+<li>
+<p><strong>ColGroup 컴포넌트</strong></p>
+<ul>
+<li><strong>기능</strong>: 테이블 컬럼의 너비를 설정.</li>
+<li><strong>설계 요소</strong>: <code>columns</code>를 받아 특정 필드는 고정 너비, 나머지는 공통 너비로 설정하여 일관된 레이아웃 유지.</li>
+</ul>
+</li>
+</ul>
+<p>개선점: propsType 같은걸로 type check 하는것도 좋아보임.
+아니면 React-table 같은 라이브러리 쓰는것도 좋아보임</p>
+<h3 id="드롭다운-버튼-컴포넌트화">드롭다운 버튼 컴포넌트화<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#드롭다운-버튼-컴포넌트화" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>문제점</strong>:<br/>
+드롭다운 버튼을 누를 때, 각 버튼에 맞는 정렬된 데이터를 API로부터 Fetch해야 했음. 이 과정에서 다양한 드롭다운 버튼이 존재하는데, 이들을 각각 공통 컴포넌트로 관리하면서도 각기 다른 동작을 수행하도록 구현하는 것이 도전이었음.</p>
+<p><strong>해결책</strong>:</p>
+<ul>
+<li>테이블 컴포넌트에서 했던 것처럼, 필요한 3개의 버튼을 객체(<code>value</code>, <code>label</code>)로 정의하고, <code>props</code>로 버튼 타입(<code>buttonType</code>), 정렬 기준(<code>orderBy</code>), 정렬 상태 업데이트 함수(<code>setOrderBy</code>)를 받아 각 버튼이 고유의 동작을 수행하도록 설계함.
+<ul>
+<li><strong>정렬 상태 관리</strong>:<br/>
+<code>sortBy</code>와 <code>order</code> 두 가지 쿼리 파라미터를 <code>orderBy</code>라는 단일 상태로 관리함. 예를 들어, <code>orderBy</code> 상태를 <code>&quot;sort-by_order&quot;</code> 형식으로 업데이트하여, API 호출 시 이 값을 <code>split</code>하여 <code>sortBy</code>와 <code>order</code>로 분리해 사용하도록 함.</li>
+</ul>
+</li>
+</ul>
+<h3 id="페이지네이션">페이지네이션<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#페이지네이션" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>문제점</strong>:<br/>
+페이지네이션을 위해 response에 totalCount를 받아 totalPages를 계산후 페이지네이션 컴포넌트에 내려줘야 하는데, 이때 query를 한 state에 관리 하다보니 api 호출함수에서 무한루프 api 호출이 발생함</p>
+<p><strong>해결책</strong>: 조건문을 달아 totalPages가 바뀔때만 렌더링 되게 바꿈.</p>
+<h3 id="문제-가로-스크롤바-커스텀-디자인">문제: 가로 스크롤바 커스텀 디자인<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-가로-스크롤바-커스텀-디자인" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>참고자료: <a href="https://inpa.tistory.com/entry/CSS-%F0%9F%8C%9F-%EC%8A%A4%ED%81%AC%EB%A1%A4-%EB%B0%94Scrollbar-%EA%BE%B8%EB%AF%B8%EA%B8%B0-%EC%86%8D%EC%84%B1-%EC%B4%9D%EC%A0%95%EB%A6%AC" class="external">스크롤 바(Scrollbar) 스타일링<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<ul>
+<li>크롬에서는 커스텀 스크롤바 디자인이 잘 적용되었으나, 파이어폭스에서는 적용되지 않는 문제가 발생함</li>
+<li>파이어폭스를 위한 CSS 코드(<code>scrollbar-width</code> 및 <code>scrollbar-color</code>)를 추가하였으나, 이로 인해 크롬의 스크롤바 디자인이 깨지는 현상이 발생</li>
+<li>파이어폭스의 경우 <code>@supports</code>를 사용하여 특정 CSS 속성 지원 여부를 확인한 뒤, 해당 속성을 적용함으로써 문제를 해결하려고 했으나, 크롬에서도 이 코드가 영향을 미치면서 디자인이 깨짐</li>
+<li>브라우저별로 별도의 CSS 파일을 로드하거나, 특정 클래스명을 사용하여 브라우저에 따라 다른 스타일을 적용해야할듯. 그런데 firefox 호환까지는 생각안해도 된다 하셔서 그냥 무시하기로 함</li>
+</ul>
+<h3 id="문제-loader-애니매이션-만들기">문제: Loader 애니매이션 만들기<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-loader-애니매이션-만들기" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>CSS animation 구현에서 어려움을 겪음:</p>
+<ul>
+<li>view 에서 i 의 head 부분만 바운스되게 애니매이션 하고 싶음</li>
+<li>해결: 로고 svg에서 i의 head 부분을 지움</li>
+<li>div 로 같은 원형을 만들어서 바운스 되게 애니매이션 줌</li>
+</ul>
+<p>문제: vw, vh을 하니까 너비를 줄였을때 점이 i의 레터에서 시작하지 않음</p>
+<p>또는 위키링크 시도:
+<img src="../../My-Garden/🌱_Seedlings/attachments/Seedlings-회고.png" width="auto" height="auto" alt/></p>
+<h4 id="해결-calc">해결: calc()<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#해결-calc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<blockquote>
+<p>calc() 함수 사용해서 부모 요소의 절반 기준으로 이동시키게 조정</p>
+</blockquote>
+<p>화면 비율이 변경되도 고정 픽셀값을 넣어줘서 원하는 위치에 dot을 넣음</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="css" data-theme="github-light github-dark"><code data-language="css" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">left: calc(50% - 75px);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">top: calc(50% - 35px);</span></span></code></pre></figure>
+<h3 id="문제-브랜드-이미지-없을때-사용할-디폴트-ui-배경과-이니셜-생성">문제: 브랜드 이미지 없을때 사용할 디폴트 UI (배경과 이니셜) 생성<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-브랜드-이미지-없을때-사용할-디폴트-ui-배경과-이니셜-생성" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="문제-상황">문제 상황<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-상황" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>회사 브랜드 이미지가 없는 경우 이니셜을 보여주는 디폴트 UI를 만들어야 했습니다. 배경색과 텍스트 색상의 대비가 중요했습니다.</p>
+<h4 id="시도-1-랜덤-색상-생성--색상-대비-비율-계산">시도 1: 랜덤 색상 생성 + 색상 대비 비율 계산<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#시도-1-랜덤-색상-생성--색상-대비-비율-계산" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>접근 방법:</strong></p>
+<ol>
+<li>배경에 랜덤 HEX 코드 색상 생성</li>
+<li>대비 계산을 통해 적절한 텍스트 색상 결정</li>
+</ol>
+<p><strong>참고 자료:</strong></p>
+<ul>
+<li><a href="https://www.paulirish.com/2009/random-hex-color-code-snippets/" class="external">Random HEX Color Code Snippets<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://dev.to/thecodepixi/what-the-hex-how-to-generate-random-hex-color-codes-in-javascript-21n" class="external">Generate Random HEX Color in JavaScript<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p><strong>문제점:</strong> 배경이 밝은 경우 기본 하얀색 텍스트가 잘 보이지 않음</p>
+<h4 id="시도-2-relative-luminance-계산을-통한-대비-개선">시도 2: Relative Luminance 계산을 통한 대비 개선<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#시도-2-relative-luminance-계산을-통한-대비-개선" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>참고 자료:</strong></p>
+<ul>
+<li><a href="https://www.w3.org/WAI/GL/wiki/Relative_luminance" class="external">Relative Luminance<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" class="external">Contrast Minimum<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.w3.org/WAI/WCAG21/Techniques/general/G145" class="external">Contrast Techniques<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.smashingmagazine.com/2022/09/realities-myths-contrast-color/" class="external">Realities and Myths of Contrast and Color<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p><strong>계산 방식:</strong></p>
+<pre><code>1. Relative luminance 공식:
+   L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+
+   여기서 R, G, B는:
+   - R sRGB &lt;= 0.04045 ? R = R sRGB /12.92 : R = ((R sRGB +0.055)/1.055) ^ 2.4
+   - G sRGB &lt;= 0.04045 ? G = G sRGB /12.92 : G = ((G sRGB +0.055)/1.055) ^ 2.4
+   - B sRGB &lt;= 0.04045 ? B = B sRGB /12.92 : B = ((B sRGB +0.055)/1.055) ^ 2.4
+
+   그리고 R sRGB, G sRGB, B sRGB는:
+   - R sRGB = R 8bit /255
+   - G sRGB = G 8bit /255
+   - B sRGB = B 8bit /255
+
+2. 대비 비율 계산:
+   (L1 + 0.05) / (L2 + 0.05)
+
+   L1 = 밝은 색상의 상대 휘도
+   L2 = 어두운 색상의 상대 휘도
+
+3. 대비 비율 최소 기준: 3:1 이상
+
+* 휘도 임계값: 0.179 (어두운/밝은 색상 판단 기준)
+</code></pre>
+<p><strong>문제점:</strong></p>
+<ul>
+<li>계산식대로 구현했는데 실제 눈으로 볼 때는 대비가 부족함</li>
+<li>W3C 기준을 충족해도 사용자 경험이 좋지 않음</li>
+<li>알고보니 오래된 공식(outdated formula)이었음</li>
+</ul>
+<h4 id="시도-3-apcaadvanced-perceptual-contrast-algorithm-적용">시도 3: APCA(Advanced Perceptual Contrast Algorithm) 적용<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#시도-3-apcaadvanced-perceptual-contrast-algorithm-적용" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>최신 APCA 공식을 찾아 적용하려 했으나, 구현 복잡도가 높고 더 근본적인 문제 발견!</p>
+<ul>
+<li>프론트엔드에서 브랜드 색을 랜덤 생성시 페이지 리로드나 페이지 이동하면 일관성 없이 브랜드 배경색이 계속 바뀜.</li>
+</ul>
+<h4 id="최종-해결책-데이터베이스에-색상-저장">최종 해결책: 데이터베이스에 색상 저장<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#최종-해결책-데이터베이스에-색상-저장" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>구현 방법:</strong></p>
+<ol>
+<li>데이터베이스의 <code>Company</code> 모델에 <code>brandColor</code> 필드 추가 (enum 타입)</li>
+<li><code>brandImage</code>가 없는 경우 <code>brandColor</code>를 사용해 일관된 배경색 적용</li>
+<li>시각적으로 검증된 6가지 색상 조합을 미리 정의</li>
+<li>각 배경색에 맞는 텍스트 색상을 최소 8:1 대비 비율로 매칭
+<a href="https://color.adobe.com/create/color-contrast-analyzer" class="external">Adobe color contrast checker<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<p><strong>seeding 전략:</strong></p>
+<ul>
+<li>테스트 데이터 생성시 6가지 색상 중 랜덤 할당</li>
+<li>실제 사용자는 동일한 brandColor 값 유지로 일관성 확보</li>
+</ul>
+<p><strong>결과:</strong></p>
+<ul>
+<li>사용자 경험 개선: 일관된 브랜드 아이덴티티 유지</li>
+<li>접근성 향상: 모든 색상 조합이 8:1 이상의 높은 대비 비율 보장</li>
+<li>어도비 색상 대비 툴로 검증된 색상 조합 사용</li>
+</ul>
+<h4 id="개선-및-학습-포인트">개선 및 학습 포인트<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#개선-및-학습-포인트" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li><strong>해시 함수 활용:</strong> 회사명에서 일관된 해시값을 생성해 색상으로 변환하면 데이터베이스 변경 없이 일관성 유지 가능</li>
+<li><strong>개인 실습 아이디어:</strong>
+<ul>
+<li>해시 함수로 일관된 랜덤 색상 생성</li>
+<li>APCA 알고리즘 구현해보기</li>
+<li>배경색에서 파생된 조화로운 대비 색상 자동 생성 기능</li>
+</ul>
+</li>
+</ol>
+<p>이 경험을 통해 접근성과 사용자 경험 측면에서 색상 대비의 중요성을 깊이 이해하게 되었습니다.</p>
+<h3 id="문제-모달-리렌더링-이슈">문제: 모달 리렌더링 이슈<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-모달-리렌더링-이슈" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>React의 <code>key</code> 속성을 이용해 모달이 리렌더링될 때 새로운 컴포넌트로 인식되도록 시도했지만, 근본적인 문제를 해결하지 못했음. 특히, 순위가 내려갈 때 발생하는 특이한 문제는 여전히 존재했음</li>
+<li>모달을 부모 컴포넌트에서 상태로 관리하여 props로 전달하는 방식도 고려했음. 그러나 <strong>모달을 부모 컴포넌트에서 내려주는 방식은 드릴링이 심해지는 문제</strong>가 있었음. 이로 인해 코드 복잡성이 증가하고, 유지보수성이 떨어질 우려가 있었음</li>
+</ul>
+<h2 id="-연관-노트">📝 연관 노트<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-연관-노트" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>그래프 뷰</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:2,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-content" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="toc-content"><ul id="34mrxy" class="overflow"><li class="depth-0"><a href="#초급-프로젝트-회고록" data-for="초급-프로젝트-회고록">초급 프로젝트 회고록</a></li><li class="depth-1"><a href="#week-1" data-for="week-1">Week 1</a></li><li class="depth-2"><a href="#문제-bigint-type-직렬화" data-for="문제-bigint-type-직렬화">문제: BigInt Type 직렬화</a></li><li class="depth-2"><a href="#문제-테이블-cell에서-ellipsis-적용-안됨" data-for="문제-테이블-cell에서-ellipsis-적용-안됨">문제: 테이블 cell에서 ellipsis 적용 안됨</a></li><li class="depth-2"><a href="#문제-테이블-border-radius-이슈" data-for="문제-테이블-border-radius-이슈">문제: 테이블 border-radius 이슈</a></li><li class="depth-2"><a href="#문제-페이지네이션-방식-선택" data-for="문제-페이지네이션-방식-선택">문제: 페이지네이션 방식 선택</a></li><li class="depth-1"><a href="#week-2-3" data-for="week-2-3">Week 2-3</a></li><li class="depth-2"><a href="#테이블-드롭다운-버튼-페이지네이션-공통-컴포넌트화" data-for="테이블-드롭다운-버튼-페이지네이션-공통-컴포넌트화">테이블, 드롭다운 버튼, 페이지네이션 공통 컴포넌트화</a></li><li class="depth-2"><a href="#드롭다운-버튼-컴포넌트화" data-for="드롭다운-버튼-컴포넌트화">드롭다운 버튼 컴포넌트화</a></li><li class="depth-2"><a href="#페이지네이션" data-for="페이지네이션">페이지네이션</a></li><li class="depth-2"><a href="#문제-가로-스크롤바-커스텀-디자인" data-for="문제-가로-스크롤바-커스텀-디자인">문제: 가로 스크롤바 커스텀 디자인</a></li><li class="depth-2"><a href="#문제-loader-애니매이션-만들기" data-for="문제-loader-애니매이션-만들기">문제: Loader 애니매이션 만들기</a></li><li class="depth-2"><a href="#문제-브랜드-이미지-없을때-사용할-디폴트-ui-배경과-이니셜-생성" data-for="문제-브랜드-이미지-없을때-사용할-디폴트-ui-배경과-이니셜-생성">문제: 브랜드 이미지 없을때 사용할 디폴트 UI (배경과 이니셜) 생성</a></li><li class="depth-2"><a href="#문제-모달-리렌더링-이슈" data-for="문제-모달-리렌더링-이슈">문제: 모달 리렌더링 이슈</a></li><li class="depth-1"><a href="#-연관-노트" data-for="-연관-노트">📝 연관 노트</a></li><li class="overflow-end"></li></ul></div></div><div class="recent-notes"><h3>최근 게시글</h3><ul class="recent-ul"><li class="recent-li"><div class="section"><div class="desc"><h3><a href="../../My-Garden/" class="internal">My Garden</a></h3></div><p class="meta"><time datetime="2025-03-21T18:23:46.490Z">2025년 3월 22일</time></p><ul class="tags"></ul></div></li><li class="recent-li"><div class="section"><div class="desc"><h3><a href="../../Books/" class="internal">Books</a></h3></div><p class="meta"><time datetime="2025-03-21T18:06:12.874Z">2025년 3월 22일</time></p><ul class="tags"></ul></div></li><li class="recent-li"><div class="section"><div class="desc"><h3><a href="../../Posts/" class="internal">Posts</a></h3></div><p class="meta"><time datetime="2025-03-21T17:55:17.997Z">2025년 3월 22일</time></p><ul class="tags"></ul></div></li><li class="recent-li"><div class="section"><div class="desc"><h3><a href="../../Projects/" class="internal">Projects</a></h3></div><p class="meta"><time datetime="2025-03-21T17:38:58.763Z">2025년 3월 22일</time></p><ul class="tags"></ul></div></li><li class="recent-li"><div class="section"><div class="desc"><h3><a href="../../" class="internal">Dev Garden</a></h3></div><p class="meta"><time datetime="2025-03-21T17:38:40.440Z">2025년 3월 22일</time></p><ul class="tags"></ul></div></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.0</a> © 2025</p><ul><li><a href="https://github.com/Im-amberIm">GitHub</a></li><li><a href="mailto:im-amberim@gmail.com">Contact</a></li></ul></footer></div></div></body><script type="application/javascript">function o(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.classList.contains("is-collapsed")?this.scrollHeight:t.scrollHeight;t.style.maxHeight=e+"px";let c=t,l=t.parentElement;for(;l;){if(!l.classList.contains("callout"))return;let i=l.classList.contains("is-collapsed")?l.scrollHeight:l.scrollHeight+c.scrollHeight;l.style.maxHeight=i+"px",c=l,l=l.parentElement}}function n(){let t=document.getElementsByClassName("callout is-collapsible");for(let s of t){let e=s.firstElementChild;if(!e)continue;e.addEventListener("click",o),window.addCleanup(()=>e.removeEventListener("click",o));let l=s.classList.contains("is-collapsed")?e.scrollHeight:s.scrollHeight;s.style.maxHeight=l+"px"}}document.addEventListener("nav",n);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>
