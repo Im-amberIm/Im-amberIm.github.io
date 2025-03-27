@@ -15,7 +15,6 @@
     "test": "tsx --test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "deploy": "quartz build && gh-pages -d public"
-    
   },
   "engines": {
     "npm": ">=9.3.1",
@@ -107,6 +106,7 @@
     "@types/ws": "^8.18.0",
     "@types/yargs": "^17.0.33",
     "esbuild": "^0.25.1",
+    "gh-pages": "^6.3.0",
     "prettier": "^3.5.3",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
