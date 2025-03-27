@@ -8,7 +8,7 @@ tags:
   - seedling
   - SVG
   - optimasation
-  - font-end
+  - fontend
   - 웹성능
 category: 웹 개발
 enableToc: true
